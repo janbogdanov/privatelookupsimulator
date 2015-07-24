@@ -12,5 +12,10 @@ SOURCES += main.cpp
 include(deployment.pri)
 qtcAddDeployment()
 
+HEADERS += \
+    gf2_ops.h \
+    secshare.h \
+    lookup.h
+
 
 
