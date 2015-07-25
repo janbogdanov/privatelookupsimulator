@@ -7,7 +7,9 @@ CONFIG -= qt
 
 TARGET = PrivateLookupSimulator
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    gf2_tests.cpp \
+    gf2_ops.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -15,7 +17,8 @@ qtcAddDeployment()
 HEADERS += \
     gf2_ops.h \
     secshare.h \
-    lookup.h
+    lookup.h \
+    gf2_tests.h
 
 
 
