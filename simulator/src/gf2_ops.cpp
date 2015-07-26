@@ -33,9 +33,14 @@ gf2to8_t gf2_inv (gf2to8_t a) {
     if (a == 0) {
         return 0;
     }
-    uint8_t i = a;
-    while (gf2_mul (a, i) != 1) {
-        i++;
+    uint8_t e = 254;
+    uint8_t i = 1;
+    while (e > 0) {
+        if (e % 2 == 1) {
+            i = gf2_mul(i, a);
+        }
+        e = e >> 1;
+        a = gf2_mul(a, a);
     }
     return i;
 }
@@ -78,9 +83,14 @@ gf2to32_t gf2_inv (gf2to32_t a) {
     if (a == 0) {
         return 0;
     }
-    uint32_t i = a;
-    while (gf2_mul (a, i) != 1) {
-        i++;
+    uint32_t e = 4294967294;
+    uint32_t i = 1;
+    while (e > 0) {
+        if (e % 2 == 1) {
+            i = gf2_mul(i, a);
+        }
+        e = e >> 1;
+        a = gf2_mul(a, a);
     }
     return i;
 }
