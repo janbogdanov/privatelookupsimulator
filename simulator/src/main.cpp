@@ -1,29 +1,10 @@
 #include <iostream>
 #include <cstdlib>
 #include "gf2_tests.h"
-#include "secshare.h"
-#include "lookup.h"
+#include "secshare_tests.h"
+#include "lookup_tests.h"
+
 using namespace std;
-
-bool test_gf2to8_secret_sharing () {
-
-    return false;
-}
-
-bool test_gf2to32_secret_sharing () {
-
-    return false;
-}
-
-bool test_gf2to8_private_lookup () {
-
-    return false;
-}
-
-bool test_gf2to32_private_lookup () {
-
-    return false;
-}
 
 int main(int argc, char *argv[]) {
 
@@ -45,9 +26,8 @@ int main(int argc, char *argv[]) {
         cout << "*** GF_2**32 ARITHMETIC FAILED!***" << endl;
     cout << endl;
 
-    /*
     cout << "*** TESTING GF_2**8 SECRET SHARING***" << endl;
-    success = test_gf2to8_secret_sharing ();
+    success = test_8bit_secret_sharing ();
     if (success)
         cout << "*** GF_2**8 SECRET SHARING OK.***" << endl;
     else
@@ -55,13 +35,14 @@ int main(int argc, char *argv[]) {
     cout << endl;
 
     cout << "*** TESTING GF_2**32 SECRET SHARING***" << endl;
-    success = test_gf2to32_secret_sharing ();
+    success = test_32bit_secret_sharing ();
     if (success)
         cout << "*** GF_2**32 SECRET SHARING OK.***" << endl;
     else
         cout << "*** GF_2**32 SECRET SHARING FAILED!***" << endl;
     cout << endl;
 
+    /*
     cout << "*** TESTING GF_2**8 PRIVATE LOOKUP***" << endl;
     success = test_gf2to8_private_lookup ();
     if (success)

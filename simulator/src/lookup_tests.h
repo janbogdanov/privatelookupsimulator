@@ -1,0 +1,8 @@
+#ifndef LOOKUP_TESTS
+#define LOOKUP_TESTS
+
+bool test_8bit_private_lookup ();
+bool test_32bit_private_lookup ();
+
+#endif // LOOKUP_TESTS
+
