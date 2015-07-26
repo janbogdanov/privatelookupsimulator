@@ -23,13 +23,13 @@ bool test_gf2to8_addition (uint8_t addend1, uint8_t addend2, uint8_t expected_su
     }
 }
 
-bool test_gf2to8_multiplication(uint8_t multiplicand1, uint8_t multiplicand2, uint8_t expected_product) {
+bool test_gf2to8_multiplication(uint8_t factor1, uint8_t factor2, uint8_t expected_product) {
 
-    cout << "Testing 8-bit gf2_mul (" << (uint32_t)multiplicand1 << ", " << (uint32_t)multiplicand2 << ") ... ";
+    cout << "Testing 8-bit gf2_mul (" << (uint32_t)factor1 << ", " << (uint32_t)factor2 << ") ... ";
 
     // Convert inputs
-    gf2to8_t a1 = gf2_new(multiplicand1);
-    gf2to8_t a2 = gf2_new(multiplicand2);
+    gf2to8_t a1 = gf2_new(factor1);
+    gf2to8_t a2 = gf2_new(factor2);
     // Multiply
     gf2to8_t product = gf2_mul (a1, a2);
     // Compare
