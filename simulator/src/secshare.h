@@ -3,6 +3,7 @@
 
 #include "gf2_ops.h"
 #include <vector>
+#include <cstdlib>
 
 // Declare secret types
 typedef gf2to8_t shared_uint8_t;
