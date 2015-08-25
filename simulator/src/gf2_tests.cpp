@@ -64,6 +64,27 @@ bool test_gf2to8_inversion(uint8_t invertible, uint8_t expected_inverse) {
     }
 }
 
+bool test_gf2to8_exponentiation(uint8_t base, uint32_t exponent, uint8_t expected_power) {
+
+    cout << "Testing 8-bit gf2_pwr (" << (uint32_t)base << ") ... ";
+
+    // Convert inputs
+    gf2to8_t a1 = gf2_new(base);
+    uint32_t a2 = gf2_new(exponent);
+    // Multiply
+    gf2to8_t power = gf2_pwr (a1, a2);
+    // Compare
+    uint8_t result = gf2_val (power);
+
+    if (result == expected_power) {
+        cout << "OK" << endl;
+        return true;
+    } else {
+        cout << "FAILED! (Was " << (uint32_t)result << ", should be " << (uint32_t)expected_power << ")" << endl;
+        return false;
+    }
+}
+
 bool test_gf2to32_addition (uint32_t addend1, uint32_t addend2, uint32_t expected_sum) {
 
     cout << "Testing 32-bit gf2_add (" << (uint32_t)addend1 << ", " << (uint32_t)addend2 << ") ... ";
@@ -126,6 +147,27 @@ bool test_gf2to32_inversion(uint32_t invertible, uint32_t expected_inverse) {
     }
 }
 
+bool test_gf2to32_exponentiation(uint32_t base, uint32_t exponent, uint32_t expected_power) {
+
+    cout << "Testing 32-bit gf2_pwr (" << (uint32_t)base << ") ... ";
+
+    // Convert inputs
+    gf2to32_t a1 = gf2_new(base);
+    uint32_t a2 = gf2_new(exponent);
+    // Multiply
+    gf2to32_t power = gf2_pwr (a1, a2);
+    // Compare
+    uint32_t result = gf2_val (power);
+
+    if (result == expected_power) {
+        cout << "OK" << endl;
+        return true;
+    } else {
+        cout << "FAILED! (Was " << (uint32_t)result << ", should be " << (uint32_t)expected_power << ")" << endl;
+        return false;
+    }
+}
+
 bool test_gf2to8_arithmetic () {
 
     bool success = false;
@@ -153,6 +195,14 @@ bool test_gf2to8_arithmetic () {
     success &= test_gf2to8_inversion(0, 0);
     success &= test_gf2to8_inversion(1, 1);
 
+    // Exponentiation tests
+    success &= test_gf2to8_exponentiation(0, 1, 0);
+    success &= test_gf2to8_exponentiation(0, 0, 0);
+    success &= test_gf2to8_exponentiation(1, 0, 1);
+    success &= test_gf2to8_exponentiation(1, 1, 1);
+    success &= test_gf2to8_exponentiation(10, 2, 68);
+    success &= test_gf2to8_exponentiation(10, 3, 146);
+
     return success;
 }
 
@@ -178,6 +228,14 @@ bool test_gf2to32_arithmetic () {
     success &= test_gf2to32_inversion(10, 3579838466);
     success &= test_gf2to32_inversion(0, 0);
     success &= test_gf2to32_inversion(1, 1);
+
+    // Exponentiation tests
+    success &= test_gf2to32_exponentiation(0, 1, 0);
+    success &= test_gf2to32_exponentiation(0, 0, 0);
+    success &= test_gf2to32_exponentiation(1, 0, 1);
+    success &= test_gf2to32_exponentiation(1, 1, 1);
+    success &= test_gf2to32_exponentiation(10, 2, 68);
+    success &= test_gf2to32_exponentiation(10, 3, 680);
 
     return success;
 }

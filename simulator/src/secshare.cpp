@@ -1,6 +1,8 @@
 #include "secshare.h"
 
-bool share (uint8_t value, shared_uint8_t &s1, shared_uint8_t &s2, shared_uint8_t &s3) {
+// TODO Make these use gf2_random
+
+bool share (uint8_t value, shared_uint8_t &s1, shared_uint8_t &s2, shared_uint8_t &s3) { 
     s1 = rand() % 255;
     s2 = rand() % 255;
     s3 = value ^ s1 ^ s2;

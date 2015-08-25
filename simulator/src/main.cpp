@@ -8,8 +8,9 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-
     bool success = false;
+
+    /*
     cout << "*** TESTING GF_2**8 ARITHMETIC ***" << endl;
     success = test_gf2to8_arithmetic ();
     if (success)
@@ -41,7 +42,7 @@ int main(int argc, char *argv[]) {
     else
         cout << "*** GF_2**32 SECRET SHARING FAILED!***" << endl;
     cout << endl;
-
+*/
     cout << "*** TESTING GF_2**8 PRIVATE LOOKUP***" << endl;
     success = test_8bit_private_lookup ();
     if (success)
@@ -49,13 +50,13 @@ int main(int argc, char *argv[]) {
     else
         cout << "*** GF_2**8 PRIVATE LOOKUP FAILED!***" << endl;
     cout << endl;
-
+/*
     cout << "*** TESTING GF_2**32 PRIVATE LOOKUP***" << endl;
     success = test_32bit_private_lookup ();
     if (success)
         cout << "*** GF_2**32 PRIVATE LOOKUP OK.***" << endl;
     else
         cout << "*** GF_2**32 PRIVATE LOOKUP FAILED!***" << endl;
-
+*/
     return EXIT_SUCCESS;
 }

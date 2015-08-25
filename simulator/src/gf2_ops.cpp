@@ -1,5 +1,7 @@
 #include "gf2_ops.h"
 
+#include <cstdlib>
+
 // 8-bit variants
 gf2to8_t gf2_new (uint8_t a) {
     // if gf2to8_t == uint8_t then nothing to do
@@ -43,6 +45,30 @@ gf2to8_t gf2_inv (gf2to8_t a) {
         a = gf2_mul(a, a);
     }
     return i;
+}
+
+gf2to8_t gf2_pwr (gf2to8_t a, uint32_t p) {
+    if (a == 0) {
+        return 0;
+    }
+    else if (p == 0) {
+        return 1;
+    }
+    uint8_t i = 1;
+    while (p > 0) {
+        if (p % 2 == 1) {
+            i = gf2_mul(i, a);
+        }
+        p = p >> 1;
+        a = gf2_mul(a, a);
+    }
+    return i;
+}
+
+void gf2_random(gf2to8_t& a) {
+    // TODO Change to use C++11 random number generator
+
+    a = rand () % 256;
 }
 
 uint8_t gf2_val (gf2to8_t a) {
@@ -93,6 +119,30 @@ gf2to32_t gf2_inv (gf2to32_t a) {
         a = gf2_mul(a, a);
     }
     return i;
+}
+
+gf2to32_t gf2_pwr (gf2to32_t a, uint32_t p) {
+    if (a == 0) {
+        return 0;
+    }
+    else if (p == 0) {
+        return 1;
+    }
+    uint32_t i = 1;
+    while (p > 0) {
+        if (p % 2 == 1) {
+            i = gf2_mul(i, a);
+        }
+        p = p >> 1;
+        a = gf2_mul(a, a);
+    }
+    return i;
+}
+
+void gf2_random(gf2to32_t& a) {
+    // TODO Change to use C++11 random number generator
+
+    a = rand () % (1 << 31);
 }
 
 uint32_t gf2_val (gf2to32_t a) {

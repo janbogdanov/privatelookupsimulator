@@ -23,7 +23,8 @@ HEADERS += \
     lookup.h \
     gf2_tests.h \
     secshare_tests.h \
-    lookup_tests.h
+    lookup_tests.h \
+    abb.h
 
 
 
