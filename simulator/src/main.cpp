@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 using namespace std;
 
 #include "gf2_tests.h"
