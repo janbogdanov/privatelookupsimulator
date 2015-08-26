@@ -10,7 +10,7 @@
 #define DEBUGPRINT_8(VAR)\
     {gf2to8_t v = 0;\
     abb_reconstruct (party1.VAR, party2.VAR, party3.VAR, v);\
-    std::cout << #VAR << " " << (uint32_t)v;}
+    std::cout << #VAR << " " << (uint32_t)v << std::endl;}
 
 template<typename private_type, typename public_type>
 struct computing_party_state{
@@ -144,7 +144,6 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     }
     uint32_t i = 0;
     for (i = 0; i < party1.r_powers.size(); i++) {
-        std::cout << std::endl;
         DEBUGPRINT_8(r_powers[i]);
 
     }
