@@ -36,9 +36,8 @@ struct computing_party_state{
     private_type r = 0;
     private_type r_inv = 0;
 
-
-
-    // TODO intermediate values here
+    //calculate power of r
+    std::vector<private_type> r_powers;
 
     // The result
     private_type w = 0;
@@ -48,10 +47,7 @@ struct computing_party_state{
 template<typename private_type, typename public_type>
 bool generate_r_with_inverse (computing_party_state<private_type, public_type>& party1,
                               computing_party_state<private_type, public_type>& party2,
-                              computing_party_state<private_type, public_type>& party3,
-                              computing_party_state<private_type, public_type> &party1_r,
-                              computing_party_state<private_type, public_type> &party2_r,
-                              computing_party_state<private_type, public_type> &party3_r)
+                              computing_party_state<private_type, public_type>& party3)
 {
 
     public_type c = 0;
@@ -100,11 +96,23 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
     party1.r_inv = gf2_mul(party1.bp, c_inv);
     party2.r_inv = gf2_mul(party2.bp, c_inv);
     party3.r_inv = gf2_mul(party3.bp, c_inv);
-    party1_r = party1.r;
-    party2_r = party2.r;
-    party3_r = party3.r;
 
     return true;
+}
+
+template<typename private_type, typename public_type>
+bool calc_powers_of_r (
+                  computing_party_state<private_type, public_type>& party1,
+                  computing_party_state<private_type, public_type>& party2,
+                  computing_party_state<private_type, public_type>& party3)
+{
+    uint32_t k = 0;
+/*    for (k = 2; (k < v.size()-1) ;k++) {
+        r_values1[k-2] = gf2_pwr(party1, k-1);
+        r_values2[k-2] = gf2_pwr(party2, k-1);
+        r_values3[k-2] = gf2_pwr(party3, k-1);
+        return true;
+    }*/
 }
 
 template<typename private_type, typename public_type>
@@ -121,26 +129,21 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     DEBUGPRINT_8(r);
     DEBUGPRINT_8(r_inv);
 
+    if (!calc_powers_of_r (party1, party2, party3)) {
+        std::cout << "calc_powers_of_r failed!" << std::endl;
+        return false;
+    }
+    uint32_t i = 0;
+    for (i = 0; i < party1.r_powers.size(); i++) {
+        std::cout << std::endl;
+        DEBUGPRINT_8(r_powers[i]);
+
+    }
+
     return true;
 }
 
-template<typename private_type, typename public_type>
-bool cycle (const std::vector<private_type>& v,
-                  computing_party_state<private_type, public_type>& party1_r,
-                  computing_party_state<private_type, public_type>& party2_r,
-                  computing_party_state<private_type, public_type>& party3_r,
-                  std::vector<private_type, public_type> &r_values1,
-                  std::vector<private_type, public_type> &r_values2,
-                  std::vector<private_type, public_type> &r_values3)
-{
-    uint32_t k = 0;
-    for (k = 2; (k < v.size()-1) ;k++) {
-        r_values1[k-2] = gf2_pwr(party1_r, k-1);
-        r_values2[k-2] = gf2_pwr(party2_r, k-1);
-        r_values3[k-2] = gf2_pwr(party3_r, k-1);
-        return true;
-    }
-}
+
 
 #endif // LOOKUP_H
 
