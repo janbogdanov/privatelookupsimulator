@@ -10,7 +10,7 @@
 #define DEBUGPRINT_8(VAR)\
     {gf2to8_t v = 0;\
     abb_reconstruct (party1.VAR, party2.VAR, party3.VAR, v);\
-    std::cout << #VAR << " " << (uint32_t)v << std::endl;}
+    std::cout << #VAR << " " << (uint32_t)v;}
 
 template<typename private_type, typename public_type>
 struct computing_party_state{
@@ -113,7 +113,7 @@ bool calc_powers_of_r (
     party1.r_powers[0] = party1.r;
     party2.r_powers[0] = party2.r;
     party3.r_powers[0] = party3.r;
-    for (k = 1; (k < party1.v.size()-1) ;k++) {
+    for (k = 1; (k < party1.v.size()) ;k++) {
         if(!abb_mult<private_type, public_type> (party1.r_powers[k-1], party2.r_powers[k-1], party3.r_powers[k-1],
                                                            party1.r, party2.r, party3.r,
                                                            party1.r_powers[k], party2.r_powers[k], party3.r_powers[k])) {
