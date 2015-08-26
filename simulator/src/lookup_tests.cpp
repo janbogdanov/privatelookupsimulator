@@ -61,6 +61,7 @@ bool test_8bit_private_lookup () {
     success = test_8bit_single_index_lookup({1}, 0);
     success &= test_8bit_single_index_lookup({2, 3}, 0);
     success &= test_8bit_single_index_lookup({2, 3}, 1);
+    success &= test_8bit_single_index_lookup({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 5);
     // ...
 
     return success;
