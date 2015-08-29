@@ -39,6 +39,11 @@ struct computing_party_state{
     //calculate power of r
     std::vector<private_type> r_powers;
 
+    //calculate lagrange coefficients
+    std::vector<public_type> temporary;
+    std::vector<public_type> coefficients;
+    std::vector<public_type> basicpoly;
+
     // The result
     private_type w = 0;
 
@@ -124,6 +129,66 @@ bool calc_powers_of_r (
     return true;
 }
 
+
+template<typename private_type, typename public_type>
+bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& party1,
+                                 computing_party_state<private_type, public_type>& party2,
+                                 computing_party_state<private_type, public_type>& party3) {
+    uint32_t i = 0;
+    uint32_t onepoint = 0;
+    uint32_t vectorsize = party1.v.size();
+    party1.temporary.resize(party1.v.size());
+    party2.temporary.resize(party2.v.size());
+    party3.temporary.resize(party3.v.size());
+    party1.basicpoly.resize(party1.v.size());
+    party2.basicpoly.resize(party2.v.size());
+    party3.basicpoly.resize(party3.v.size());
+    for (onepoint = 0; onepoint < vectorsize; onepoint++) {
+        for (i = 0; i < vectorsize; i++) {
+            if (i == 0) {
+                party1.coefficients[i] = 1;
+            }
+            else {
+                party1.coefficients[i] = 0;
+            }
+        }
+        for (std::vector<uint8_t>::iterator it = party1.v.begin(); it != party1.v.end(); it++){
+            if (std::distance(party1.v.begin(), it) != onepoint) {
+                for(i = 0; i < vectorsize; i++) {
+                    party1.temporary[i] = party1.coefficients[i];
+                }
+                uint8_t invdiff = gf2_inv(gf2_add(onepoint, std::distance(party1.v.begin(), it)));
+                uint8_t freeterm = gf2_mul(std::distance(party1.v.begin(), it), invdiff);
+
+                for (i = 0; i < vectorsize; i++) {
+                    party1.coefficients[i] = gf2_mul(party1.temporary[i], freeterm);
+                    if (i > 0) {
+                        party1.coefficients[i] = gf2_add(party1.coefficients[i], gf2_mul(party1.temporary[i-1], invdiff));
+                    }
+                }
+            }
+        }
+        for (i = 0; i < vectorsize; i++) {
+            party1.coefficients[i + vectorsize + onepoint] = party1.basicpoly[i];
+            party2.coefficients[i + vectorsize + onepoint] = party2.basicpoly[i];
+            party3.coefficients[i + vectorsize + onepoint] = party3.basicpoly[i];
+        }
+    }
+    return true;
+}
+
+template<typename private_type, typename public_type>
+bool calc_lagrange_basicpoly (computing_party_state<private_type, public_type>& party1,
+                                 computing_party_state<private_type, public_type>& party2,
+                                 computing_party_state<private_type, public_type>& party3) {
+
+    uint32_t vectorsize = party1.v.size();
+
+
+
+}
+
+
 template<typename private_type, typename public_type>
 bool lookup (computing_party_state<private_type, public_type>& party1,
              computing_party_state<private_type, public_type>& party2,
@@ -147,7 +212,6 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
         DEBUGPRINT_8(r_powers[i]);
 
     }
-
     return true;
 }
 
