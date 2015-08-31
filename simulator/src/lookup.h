@@ -44,6 +44,9 @@ struct computing_party_state{
     std::vector<public_type> coefficients;
     std::vector<public_type> basicpoly;
 
+    //calculate online phase
+    public_type z = 0;
+
     // The result
     private_type w = 0;
 
@@ -187,17 +190,10 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     return true;
 }
 
-/*template<typename private_type, typename public_type>
-bool calc_lagrange_basicpoly (computing_party_state<private_type, public_type>& party1,
-                                 computing_party_state<private_type, public_type>& party2,
-                                 computing_party_state<private_type, public_type>& party3) {
-
-    uint32_t vectorsize = party1.v.size();
-
-
-
-}*/
-
+template<typename private_type, typename public_type>
+bool calculate_z (computing_party_state<private_type, public_type>& party1,
+                  computing_party_state<private_type, public_type>& party2,
+                  computing_party_state<private_type, public_type>& party3)
 
 template<typename private_type, typename public_type>
 bool lookup (computing_party_state<private_type, public_type>& party1,
