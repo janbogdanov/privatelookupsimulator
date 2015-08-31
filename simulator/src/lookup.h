@@ -147,23 +147,33 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
         for (i = 0; i < vectorsize; i++) {
             if (i == 0) {
                 party1.coefficients[i] = 1;
+                party2.coefficients[i] = 1;
+                party3.coefficients[i] = 1;
             }
             else {
                 party1.coefficients[i] = 0;
+                party2.coefficients[i] = 0;
+                party3.coefficients[i] = 0;
             }
         }
         for (std::vector<uint8_t>::iterator it = party1.v.begin(); it != party1.v.end(); it++){
             if (std::distance(party1.v.begin(), it) != onepoint) {
                 for(i = 0; i < vectorsize; i++) {
                     party1.temporary[i] = party1.coefficients[i];
+                    party2.temporary[i] = party2.coefficients[i];
+                    party3.temporary[i] = party3.coefficients[i];
                 }
                 uint8_t invdiff = gf2_inv(gf2_add(onepoint, std::distance(party1.v.begin(), it)));
                 uint8_t freeterm = gf2_mul(std::distance(party1.v.begin(), it), invdiff);
 
                 for (i = 0; i < vectorsize; i++) {
                     party1.coefficients[i] = gf2_mul(party1.temporary[i], freeterm);
+                    party2.coefficients[i] = gf2_mul(party2.temporary[i], freeterm);
+                    party3.coefficients[i] = gf2_mul(party3.temporary[i], freeterm);
                     if (i > 0) {
                         party1.coefficients[i] = gf2_add(party1.coefficients[i], gf2_mul(party1.temporary[i-1], invdiff));
+                        party2.coefficients[i] = gf2_add(party2.coefficients[i], gf2_mul(party2.temporary[i-1], invdiff));
+                        party3.coefficients[i] = gf2_add(party3.coefficients[i], gf2_mul(party3.temporary[i-1], invdiff));
                     }
                 }
             }
@@ -177,7 +187,7 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     return true;
 }
 
-template<typename private_type, typename public_type>
+/*template<typename private_type, typename public_type>
 bool calc_lagrange_basicpoly (computing_party_state<private_type, public_type>& party1,
                                  computing_party_state<private_type, public_type>& party2,
                                  computing_party_state<private_type, public_type>& party3) {
@@ -186,7 +196,7 @@ bool calc_lagrange_basicpoly (computing_party_state<private_type, public_type>& 
 
 
 
-}
+}*/
 
 
 template<typename private_type, typename public_type>
