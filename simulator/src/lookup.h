@@ -239,6 +239,9 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
         std::cout << "calc_lagrange_basepoly failed!" << std::endl;
         return false;
     }
+    for (i = 0; i < party1.coefficients.size(); i++) {
+        DEBUGPRINT_8(coefficients[i]);
+    }
     if (!calculate_z (party1, party2, party3)) {
         std::cout << "calc_z failed!" << std::endl;
         return false;
