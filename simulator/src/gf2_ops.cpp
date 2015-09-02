@@ -65,6 +65,10 @@ gf2to8_t gf2_pwr (gf2to8_t a, uint32_t p) {
     return i;
 }
 
+/*gf2to8_t element_n(uint32_t a) {
+    return a & 255;
+}*/
+
 void gf2_random(gf2to8_t& a) {
     // TODO Change to use C++11 random number generator
 
@@ -137,6 +141,10 @@ gf2to32_t gf2_pwr (gf2to32_t a, uint32_t p) {
         a = gf2_mul(a, a);
     }
     return i;
+}
+
+gf2to32_t element_n (uint32_t a) {
+    return a & 4294967295;
 }
 
 void gf2_random(gf2to32_t& a) {

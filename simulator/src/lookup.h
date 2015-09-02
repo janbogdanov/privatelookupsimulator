@@ -157,7 +157,7 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     indices.resize(party1.v.size());
     indices[0] = 1;
     for (i = 1; i < vectorsize; i++) {
-        indices[i] = gf2_add(indices[i-1], 1);
+        indices[i] = element_n(i);
     }
     for (onepoint = 0; onepoint < vectorsize; onepoint++) {
         for (size_t k = 0; k < vectorsize; k++){

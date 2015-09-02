@@ -22,6 +22,7 @@ gf2to32_t gf2_add (gf2to32_t a, gf2to32_t b);
 gf2to32_t gf2_mul (gf2to32_t a, gf2to32_t b);
 gf2to32_t gf2_inv (gf2to32_t a);
 gf2to32_t gf2_pwr (gf2to32_t a, uint32_t p);
+gf2to32_t element_n (uint32_t a);
 void gf2_random (gf2to32_t& a);
 uint32_t gf2_val (gf2to32_t a);
 
