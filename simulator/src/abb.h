@@ -51,8 +51,14 @@ bool abb_mult (const private_type& a1, const private_type a2, const private_type
 }
 
 template<typename private_type, typename public_type>
-bool abb_mult_pub (const private_type& share, ) {
+bool abb_mult_pub (const private_type& a1, const private_type a2, const private_type a3,
+                   const public_type& b,
+                   private_type& c1, private_type& c2, private_type& c3) {
+    c1 = gf2_mul(a1, b);
+    c2 = gf2_mul(a2, b);
+    c3 = gf2_mul(a3, b);
 
+    return true;
 }
 
 #endif // ABB

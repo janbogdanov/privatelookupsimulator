@@ -139,7 +139,7 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
                                  computing_party_state<private_type, public_type>& party2,
                                  computing_party_state<private_type, public_type>& party3) {
     uint32_t i = 0;
-    uint32_t onepoint = 0;
+    private_type onepoint = 0;
     uint32_t vectorsize = party1.v.size();
     party1.temporary.resize(party1.v.size());
     party2.temporary.resize(party2.v.size());
@@ -147,6 +147,13 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     party1.basicpoly.resize(party1.v.size());
     party2.basicpoly.resize(party2.v.size());
     party3.basicpoly.resize(party3.v.size());
+    std::vector<public_type> indices;
+    indices.resize(party1.v.size());
+    indices[0] = 0;
+    for (i = 1; i < vectorsize; i++) {
+        indices[i] = gf2_add(indices[i-1], 1);
+    }
+
     for (onepoint = 1; onepoint <= vectorsize; onepoint++) {
 
         party1.coefficients.resize (vectorsize, 0);
@@ -157,14 +164,14 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
         party3.coefficients[0] = 1;
 
         for (size_t k = 1; k <= vectorsize; k++){
-            if (onepoint != k) {
+            if (onepoint != indices[k]) {
                 for(i = 0; i < vectorsize; i++) {
                     party1.temporary[i] = party1.coefficients[i];
                     party2.temporary[i] = party2.coefficients[i];
-                    party3.temporary[i] = party3.coefficients[i];
+                    party3.temporary[i] = party3.coefficients[i];                    
                 }
-                uint32_t invdiff = gf2_inv(gf2_add(onepoint, k));
-                uint32_t freeterm = gf2_mul(k, invdiff);
+                private_type invdiff = gf2_inv(gf2_add(onepoint, indices[k]));
+                private_type freeterm = gf2_mul(indices[k], invdiff);
 
                 for (i = 0; i < vectorsize; i++) {
                     party1.coefficients[i] = gf2_mul(party1.temporary[i], freeterm);
@@ -205,6 +212,7 @@ bool calculate_z (computing_party_state<private_type, public_type>& party1,
         std::cout << "reconstruction failed!(z)" << std::endl;
         return false;
     }
+    return true;
 
 }
 
