@@ -147,22 +147,19 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     party1.basicpoly.resize(vectorsize);
     party2.basicpoly.resize(vectorsize);
     party3.basicpoly.resize(vectorsize);
+    party1.coefficients.resize (vectorsize*vectorsize, 0);
+    party2.coefficients.resize (vectorsize*vectorsize, 0);
+    party3.coefficients.resize (vectorsize*vectorsize, 0);
+    party1.coefficients[0] = 1;
+    party2.coefficients[0] = 1;
+    party3.coefficients[0] = 1;
     std::vector<public_type> indices;
     indices.resize(party1.v.size());
     indices[0] = 1;
     for (i = 1; i < vectorsize; i++) {
         indices[i] = gf2_add(indices[i-1], 1);
     }
-
     for (onepoint = 0; onepoint < vectorsize; onepoint++) {
-
-        party1.coefficients.resize (vectorsize, 0);
-        party2.coefficients.resize (vectorsize, 0);
-        party3.coefficients.resize (vectorsize, 0);
-        party1.coefficients[0] = 1;
-        party2.coefficients[0] = 1;
-        party3.coefficients[0] = 1;
-
         for (size_t k = 0; k < vectorsize; k++){
             if (onepoint != k) {
                 for(i = 0; i < vectorsize; i++) {
