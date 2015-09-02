@@ -149,12 +149,12 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     party3.basicpoly.resize(vectorsize);
     std::vector<public_type> indices;
     indices.resize(party1.v.size());
-    indices[0] = 0;
+    indices[0] = 1;
     for (i = 1; i < vectorsize; i++) {
         indices[i] = gf2_add(indices[i-1], 1);
     }
 
-    for (onepoint = 1; onepoint <= vectorsize; onepoint++) {
+    for (onepoint = 0; onepoint < vectorsize; onepoint++) {
 
         party1.coefficients.resize (vectorsize, 0);
         party2.coefficients.resize (vectorsize, 0);
@@ -163,7 +163,7 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
         party2.coefficients[0] = 1;
         party3.coefficients[0] = 1;
 
-        for (size_t k = 1; k <= vectorsize; k++){
+        for (size_t k = 0; k < vectorsize; k++){
             if (onepoint != k) {
                 for(i = 0; i < vectorsize; i++) {
                     party1.temporary[i] = party1.coefficients[i];
@@ -186,9 +186,9 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
             }
         }
         for (i = 0; i < vectorsize; i++) {
-            party1.coefficients[i + vectorsize + onepoint] = party1.basicpoly[i];
-            party2.coefficients[i + vectorsize + onepoint] = party2.basicpoly[i];
-            party3.coefficients[i + vectorsize + onepoint] = party3.basicpoly[i];
+            party1.coefficients[i * vectorsize + onepoint] = party1.basicpoly[i];
+            party2.coefficients[i * vectorsize + onepoint] = party2.basicpoly[i];
+            party3.coefficients[i * vectorsize + onepoint] = party3.basicpoly[i];
         }
     }
     return true;
