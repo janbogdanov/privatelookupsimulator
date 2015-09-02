@@ -144,40 +144,43 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     party1.temporary.resize(vectorsize);
     party2.temporary.resize(vectorsize);
     party3.temporary.resize(vectorsize);
-    party1.basicpoly.resize(vectorsize);
-    party2.basicpoly.resize(vectorsize);
-    party3.basicpoly.resize(vectorsize);
     party1.coefficients.resize (vectorsize*vectorsize, 0);
     party2.coefficients.resize (vectorsize*vectorsize, 0);
     party3.coefficients.resize (vectorsize*vectorsize, 0);
-    party1.coefficients[0] = 1;
-    party2.coefficients[0] = 1;
-    party3.coefficients[0] = 1;
+    party1.basicpoly.resize(vectorsize);
+    party2.basicpoly.resize(vectorsize);
+    party3.basicpoly.resize(vectorsize);
     std::vector<public_type> indices;
     indices.resize(party1.v.size());
-    indices[0] = 1;
-    for (i = 1; i < vectorsize; i++) {
-        indices[i] = element_n(i);
+    //indices[0] = 1;
+    for (i = 0; i < vectorsize; i++) {
+        indices[i] = element_n(i+1);
     }
     for (onepoint = 0; onepoint < vectorsize; onepoint++) {
+        party1.basicpoly.clear();
+        party2.basicpoly.clear();
+        party3.basicpoly.clear();
+        party1.basicpoly[0] = 1;
+        party2.basicpoly[0] = 1;
+        party3.basicpoly[0] = 1;
         for (size_t k = 0; k < vectorsize; k++){
             if (onepoint != k) {
                 for(i = 0; i < vectorsize; i++) {
-                    party1.temporary[i] = party1.coefficients[i];
-                    party2.temporary[i] = party2.coefficients[i];
-                    party3.temporary[i] = party3.coefficients[i];                    
+                    party1.temporary[i] = party1.basicpoly[i];
+                    party2.temporary[i] = party2.basicpoly[i];
+                    party3.temporary[i] = party3.basicpoly[i];
                 }
                 private_type invdiff = gf2_inv(gf2_add(indices[onepoint], indices[k]));
                 private_type freeterm = gf2_mul(indices[k], invdiff);
 
                 for (i = 0; i < vectorsize; i++) {
-                    party1.coefficients[i] = gf2_mul(party1.temporary[i], freeterm);
-                    party2.coefficients[i] = gf2_mul(party2.temporary[i], freeterm);
-                    party3.coefficients[i] = gf2_mul(party3.temporary[i], freeterm);
+                    party1.basicpoly[i] = gf2_mul(party1.temporary[i], freeterm);
+                    party2.basicpoly[i] = gf2_mul(party2.temporary[i], freeterm);
+                    party3.basicpoly[i] = gf2_mul(party3.temporary[i], freeterm);
                     if (i > 0) {
-                        party1.coefficients[i] = gf2_add(party1.coefficients[i], gf2_mul(party1.temporary[i-1], invdiff));
-                        party2.coefficients[i] = gf2_add(party2.coefficients[i], gf2_mul(party2.temporary[i-1], invdiff));
-                        party3.coefficients[i] = gf2_add(party3.coefficients[i], gf2_mul(party3.temporary[i-1], invdiff));
+                        party1.basicpoly[i] = gf2_add(party1.coefficients[i], gf2_mul(party1.temporary[i-1], invdiff));
+                        party2.basicpoly[i] = gf2_add(party2.coefficients[i], gf2_mul(party2.temporary[i-1], invdiff));
+                        party3.basicpoly[i] = gf2_add(party3.coefficients[i], gf2_mul(party3.temporary[i-1], invdiff));
                     }
                 }
             }
