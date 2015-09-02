@@ -45,6 +45,7 @@ struct computing_party_state{
     std::vector<public_type> basicpoly;
 
     //calculate online phase
+    private_type z_private = 0;
     public_type z = 0;
 
     // The result
@@ -90,7 +91,7 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
         }
 
         if (!abb_reconstruct (party1.c1, party2.c2, party3.c3, c)) {
-            std::cout << "abb_reconstruct failed!" << std::endl;
+            std::cout << "abb_reconstruct    failed!" << std::endl;
             return false;
         }
 
@@ -146,7 +147,7 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     party1.basicpoly.resize(party1.v.size());
     party2.basicpoly.resize(party2.v.size());
     party3.basicpoly.resize(party3.v.size());
-    for (onepoint = 0; onepoint < vectorsize; onepoint++) {
+    for (onepoint = 1; onepoint <= vectorsize; onepoint++) {
 
         party1.coefficients.resize (vectorsize, 0);
         party2.coefficients.resize (vectorsize, 0);
@@ -155,15 +156,15 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
         party2.coefficients[0] = 1;
         party3.coefficients[0] = 1;
 
-        for (std::vector<uint8_t>::iterator it = party1.v.begin(); it != party1.v.end(); it++){
-            if (std::distance(party1.v.begin(), it) != onepoint) {
+        for (size_t k = 1; k <= vectorsize; k++){
+            if (onepoint != k) {
                 for(i = 0; i < vectorsize; i++) {
                     party1.temporary[i] = party1.coefficients[i];
                     party2.temporary[i] = party2.coefficients[i];
                     party3.temporary[i] = party3.coefficients[i];
                 }
-                uint8_t invdiff = gf2_inv(gf2_add(onepoint, std::distance(party1.v.begin(), it)));
-                uint8_t freeterm = gf2_mul(std::distance(party1.v.begin(), it), invdiff);
+                uint32_t invdiff = gf2_inv(gf2_add(onepoint, k));
+                uint32_t freeterm = gf2_mul(k, invdiff);
 
                 for (i = 0; i < vectorsize; i++) {
                     party1.coefficients[i] = gf2_mul(party1.temporary[i], freeterm);
@@ -189,7 +190,23 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
 template<typename private_type, typename public_type>
 bool calculate_z (computing_party_state<private_type, public_type>& party1,
                   computing_party_state<private_type, public_type>& party2,
-                  computing_party_state<private_type, public_type>& party3)
+                  computing_party_state<private_type, public_type>& party3) {
+
+    if (!abb_mult<private_type, public_type> (party1.j, party2.j, party3.j,
+              party1.r_inv, party2.r_inv, party3.r_inv,
+              party1.z_private, party2.z_private, party3.z_private)) {
+        std::cout << "abb_mult failed!(calculate_z)" << std::endl;
+        return false;
+    }
+
+    public_type z_interm = 0;
+
+    if (!abb_reconstruct<private_type> (party1.z_private, party2.z_private, party3.z_private, z_interm)) {
+        std::cout << "reconstruction failed!(z)" << std::endl;
+        return false;
+    }
+
+}
 
 template<typename private_type, typename public_type>
 bool lookup (computing_party_state<private_type, public_type>& party1,
@@ -200,7 +217,6 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
         std::cout << "generate_r_with_inverse failed!" << std::endl;
         return false;
     }
-
     std::cout << std::endl;
     DEBUGPRINT_8(r);
     DEBUGPRINT_8(r_inv);
@@ -213,6 +229,14 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     for (i = 0; i < party1.r_powers.size(); i++) {
         DEBUGPRINT_8(r_powers[i]);
 
+    }
+    if (!calc_lagrange_basepoly (party1, party2, party3)) {
+        std::cout << "calc_lagrange_basepoly failed!" << std::endl;
+        return false;
+    }
+    if (!calculate_z (party1, party2, party3)) {
+        std::cout << "calc_z failed!" << std::endl;
+        return false;
     }
     return true;
 }

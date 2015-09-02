@@ -14,6 +14,17 @@ bool abb_reconstruct (const private_type& share1, const private_type& share2, co
 
 
 template<typename private_type, typename public_type>
+bool abb_add (const private_type& a1, const private_type a2, const private_type a3,
+              const private_type& b1, const private_type b2, const private_type b3,
+              private_type& c1, private_type& c2, private_type& c3) {
+    c1 = gf2_add (a1, b1);
+    c2 = gf2_add (a2, b2);
+    c3 = gf2_add (a3, b3);
+
+    return true;
+}
+
+template<typename private_type, typename public_type>
 bool abb_mult (const private_type& a1, const private_type a2, const private_type a3,
                const private_type& b1, const private_type b2, const private_type b3,
                private_type& c1, private_type& c2, private_type& c3) {
@@ -37,6 +48,11 @@ bool abb_mult (const private_type& a1, const private_type a2, const private_type
         return false;
     }
     return true;
+}
+
+template<typename private_type, typename public_type>
+bool abb_mult_pub (const private_type& share, ) {
+
 }
 
 #endif // ABB
