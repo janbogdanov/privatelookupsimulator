@@ -52,14 +52,24 @@ bool abb_mult (const private_type& a1, const private_type a2, const private_type
 
 template<typename private_type, typename public_type>
 bool abb_mult_pub (const private_type& a1, const private_type a2, const private_type a3,
-                   const public_type& b,
+                   const public_type& b1, const public_type& b2, const public_type& b3,
                    private_type& c1, private_type& c2, private_type& c3) {
-    c1 = gf2_mul(a1, b);
-    c2 = gf2_mul(a2, b);
-    c3 = gf2_mul(a3, b);
+    c1 = gf2_mul(a1, b1);
+    c2 = gf2_mul(a2, b2);
+    c3 = gf2_mul(a3, b3);
 
     return true;
 }
 
+template<typename private_type, typename public_type>
+bool abb_mult_pub_final_calc (const private_type& a1, const private_type a2, const private_type a3,
+                   const public_type& b, const public_type& k,
+                   private_type& c1, private_type& c2, private_type& c3) {
+    c1 = gf2_mul(a1, gf2_pwr(b, k));
+    c2 = gf2_mul(a2, gf2_pwr(b, k));
+    c3 = gf2_mul(a3, gf2_pwr(b, k));
+
+    return true;
+}
 #endif // ABB
 

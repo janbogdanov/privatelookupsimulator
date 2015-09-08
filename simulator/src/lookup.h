@@ -44,9 +44,15 @@ struct computing_party_state{
     std::vector<public_type> coefficients;
     std::vector<public_type> basicpoly;
 
+    //calculate vector-only phase
+    private_type c_interm = 0;
+    std::vector<private_type> ck;
+    std::vector<private_type> yk;
+
     //calculate online phase
     private_type z_private = 0;
     public_type z = 0;
+    public_type z_interm = 0;
 
     // The result
     private_type w = 0;
@@ -178,9 +184,9 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
                     party2.basicpoly[i] = gf2_mul(party2.temporary[i], freeterm);
                     party3.basicpoly[i] = gf2_mul(party3.temporary[i], freeterm);
                     if (i > 0) {
-                        party1.basicpoly[i] = gf2_add(party1.coefficients[i], gf2_mul(party1.temporary[i-1], invdiff));
-                        party2.basicpoly[i] = gf2_add(party2.coefficients[i], gf2_mul(party2.temporary[i-1], invdiff));
-                        party3.basicpoly[i] = gf2_add(party3.coefficients[i], gf2_mul(party3.temporary[i-1], invdiff));
+                        party1.basicpoly[i] = gf2_add(party1.basicpoly[i], gf2_mul(party1.temporary[i-1], invdiff));
+                        party2.basicpoly[i] = gf2_add(party2.basicpoly[i], gf2_mul(party2.temporary[i-1], invdiff));
+                        party3.basicpoly[i] = gf2_add(party3.basicpoly[i], gf2_mul(party3.temporary[i-1], invdiff));
                     }
                 }
             }
@@ -189,6 +195,63 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
             party1.coefficients[i * vectorsize + onepoint] = party1.basicpoly[i];
             party2.coefficients[i * vectorsize + onepoint] = party2.basicpoly[i];
             party3.coefficients[i * vectorsize + onepoint] = party3.basicpoly[i];
+        }
+    }
+    return true;
+}
+
+template<typename private_type, typename public_type>
+bool calculate_c (computing_party_state<private_type, public_type>& party1,
+                  computing_party_state<private_type, public_type>& party2,
+                  computing_party_state<private_type, public_type>& party3) {
+
+    private_type c_interm1 = 0;
+    private_type c_interm2 = 0;
+    private_type c_interm3 = 0;
+    uint32_t i = 0;
+    uint32_t k = 0;
+    uint32_t vectorsize = party1.v.size();
+    party1.ck.resize(vectorsize);
+    party2.ck.resize(vectorsize);
+    party3.ck.resize(vectorsize);
+    party1.ck[0] = 0;
+    party2.ck[0] = 0;
+    party3.ck[0] = 0;
+    for (k = 0; k < vectorsize-1; k++) {
+        for (i = 0; i < vectorsize-1; i++) {
+            if (!abb_mult_pub<private_type, public_type> (party1.v[i], party2.v[i], party3.v[i],
+                                                          party1.coefficients[i * vectorsize + k], party2.coefficients[i * vectorsize + k], party3.coefficients[i * vectorsize + k],
+                                                          c_interm1, c_interm2, c_interm3)) {
+                std::cout << "abb_mult_pub failed!(calculate_c)" << std::endl;
+                return false;
+            }
+            if (!abb_add<private_type, public_type> (party1.ck[k], party2.ck[k], party3.ck[k],
+                                                     party1.c_interm, party2.c_interm, party3.c_interm,
+                                                     party1.ck[k], party2.ck[k], party3.ck[k])) {
+                std::cout << "abb_add failed!(calculate_c)" << std::endl;
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+template<typename private_type, typename public_type>
+bool calculate_y (computing_party_state<private_type, public_type>& party1,
+                  computing_party_state<private_type, public_type>& party2,
+                  computing_party_state<private_type, public_type>& party3) {
+
+    uint32_t k = 0;
+    uint32_t vectorsize = party1.v.size();
+    party1.yk.resize(vectorsize);
+    party2.yk.resize(vectorsize);
+    party3.yk.resize(vectorsize);
+    for (k = 0; k < vectorsize; k++) {
+        if(!abb_mult<private_type, public_type> (party1.ck[k], party2.ck[k], party3.ck[k],
+                                                 party1.r_powers[k], party2.r_powers[k], party3.r_powers[k],
+                                                 party1.yk[k], party2.yk[k], party3.yk[k])) {
+            std::cout << "abb_mult failed!(calculate_y)" << std::endl;
+            return false;
         }
     }
     return true;
@@ -212,8 +275,37 @@ bool calculate_z (computing_party_state<private_type, public_type>& party1,
         std::cout << "reconstruction failed!(z)" << std::endl;
         return false;
     }
-    return true;
+    party1.z_interm = z_interm;
+    party2.z_interm = z_interm;
+    party3.z_interm = z_interm;
 
+    return true;
+}
+
+template<typename private_type, typename public_type>
+bool calculate_w (computing_party_state<private_type, public_type>& party1,
+                  computing_party_state<private_type, public_type>& party2,
+                  computing_party_state<private_type, public_type>& party3) {
+    uint32_t k = 0;
+    uint32_t vectorsize = party1.v.size();
+    private_type w_interm1 = 0;
+    private_type w_interm2 = 0;
+    private_type w_interm3 = 0;
+    for (k = 0; k < vectorsize - 1; k++) {
+        if (!abb_mult_pub_final_calc<private_type, public_type> (party1.yk[k], party2.yk[k], party3.yk[k],
+                                                                 party1.z_interm, k,
+                                                                 w_interm1, w_interm2, w_interm3)) {
+            std::cout << "abb_mult_pub_final_calc failed!(w)" << std::endl;
+            return false;
+        }
+        if (!abb_add<private_type, public_type> (party1.w, party1.w, party1.w,
+                                                 w_interm1, w_interm2, w_interm3,
+                                                 party1.w, party2.w, party3.w)) {
+            std::cout << "abb_add failed!(w)" << std::endl;
+            return false;
+        }
+    }
+    return true;
 }
 
 template<typename private_type, typename public_type>
@@ -242,11 +334,23 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
         std::cout << "calc_lagrange_basepoly failed!" << std::endl;
         return false;
     }
+    if (!calculate_c (party1, party2, party3)) {
+        std::cout << "calc_c failed!" << std::endl;
+        return false;
+    }
+    if (!calculate_y (party1, party2, party3)) {
+        std::cout << "calc_w failed!" << std::endl;
+        return false;
+    }
     for (i = 0; i < party1.coefficients.size(); i++) {
         DEBUGPRINT_8(coefficients[i]);
     }
     if (!calculate_z (party1, party2, party3)) {
         std::cout << "calc_z failed!" << std::endl;
+        return false;
+    }
+    if (!calculate_w (party1, party2, party3)) {
+        std::cout << "calc_w failed!" << std::endl;
         return false;
     }
     return true;
