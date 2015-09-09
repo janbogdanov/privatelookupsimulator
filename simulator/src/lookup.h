@@ -214,11 +214,8 @@ bool calculate_c (computing_party_state<private_type, public_type>& party1,
     party1.ck.resize(vectorsize);
     party2.ck.resize(vectorsize);
     party3.ck.resize(vectorsize);
-    party1.ck[0] = 0;
-    party2.ck[0] = 0;
-    party3.ck[0] = 0;
-    for (k = 0; k < vectorsize-1; k++) {
-        for (i = 0; i < vectorsize-1; i++) {
+    for (k = 0; k < vectorsize; k++) {
+        for (i = 0; i < vectorsize; i++) {
             if (!abb_mult_pub<private_type, public_type> (party1.v[i], party2.v[i], party3.v[i],
                                                           party1.coefficients[i * vectorsize + k], party2.coefficients[i * vectorsize + k], party3.coefficients[i * vectorsize + k],
                                                           c_interm1, c_interm2, c_interm3)) {
@@ -291,7 +288,7 @@ bool calculate_w (computing_party_state<private_type, public_type>& party1,
     private_type w_interm1 = 0;
     private_type w_interm2 = 0;
     private_type w_interm3 = 0;
-    for (k = 0; k < vectorsize - 1; k++) {
+    for (k = 0; k < vectorsize; k++) {
         if (!abb_mult_pub_final_calc<private_type, public_type> (party1.yk[k], party2.yk[k], party3.yk[k],
                                                                  party1.z_interm, k,
                                                                  w_interm1, w_interm2, w_interm3)) {
@@ -328,31 +325,38 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     uint32_t i = 0;
     for (i = 0; i < party1.r_powers.size(); i++) {
         DEBUGPRINT_8(r_powers[i]);
-
     }
     if (!calc_lagrange_basepoly (party1, party2, party3)) {
         std::cout << "calc_lagrange_basepoly failed!" << std::endl;
         return false;
     }
+    for (i = 0; i < party1.coefficients.size(); i++) {
+        DEBUGPRINT_8(coefficients[i]);
+    }
     if (!calculate_c (party1, party2, party3)) {
         std::cout << "calc_c failed!" << std::endl;
-        return false;
-    }
-    if (!calculate_y (party1, party2, party3)) {
-        std::cout << "calc_w failed!" << std::endl;
         return false;
     }
     for (i = 0; i < party1.coefficients.size(); i++) {
         DEBUGPRINT_8(coefficients[i]);
     }
+    if (!calculate_y (party1, party2, party3)) {
+        std::cout << "calc_w failed!" << std::endl;
+        return false;
+    }
+    for (i = 0; i < party1.ck.size(); i++) {
+        DEBUGPRINT_8(ck[i]);
+    }
     if (!calculate_z (party1, party2, party3)) {
         std::cout << "calc_z failed!" << std::endl;
         return false;
     }
+    DEBUGPRINT_8(z_interm);
     if (!calculate_w (party1, party2, party3)) {
         std::cout << "calc_w failed!" << std::endl;
         return false;
     }
+    DEBUGPRINT_8(w);
     return true;
 }
 
