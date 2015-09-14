@@ -229,7 +229,7 @@ bool calculate_c (computing_party_state<private_type, public_type>& party1,
                 return false;
             }
             if (!abb_add<private_type, public_type> (party1.ck[k], party2.ck[k], party3.ck[k],
-                                                     c_interm1, c_interm2, c_interm2,
+                                                     c_interm1, c_interm2, c_interm3,
                                                      party1.ck[k], party2.ck[k], party3.ck[k])) {
                 std::cout << "abb_add failed!(calculate_c)" << std::endl;
                 return false;
@@ -301,7 +301,7 @@ bool calculate_w (computing_party_state<private_type, public_type>& party1,
             std::cout << "abb_mult_pub_final_calc failed!(w)" << std::endl;
             return false;
         }
-        if (!abb_add<private_type, public_type> (party1.w, party1.w, party1.w,
+        if (!abb_add<private_type, public_type> (party1.w, party2.w, party3.w,
                                                  w_interm1, w_interm2, w_interm3,
                                                  party1.w, party2.w, party3.w)) {
             std::cout << "abb_add failed!(w)" << std::endl;
