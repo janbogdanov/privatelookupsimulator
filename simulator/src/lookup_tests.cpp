@@ -44,7 +44,7 @@ bool test_8bit_single_index_lookup (std::vector<uint8_t> array, size_t index) {
 
     // Check correctness of result
     if (element != array[index]) {
-        cout << "FAILED! (Lookup result wrong: " << element << ", expected " << array[index] << ".)" << endl;
+        cout << "FAILED! (Lookup result wrong: " << (uint32_t)element << ", expected " << (uint32_t)array[index] << ".)" << endl;
         return false;
     }
 
