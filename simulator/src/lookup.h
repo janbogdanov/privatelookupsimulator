@@ -45,7 +45,7 @@ struct computing_party_state{
     std::vector<public_type> basicpoly;
 
     //calculate vector-only phase
-    private_type c_interm = 0;
+    //private_type c_interm = 0;
     std::vector<private_type> ck;
     std::vector<private_type> yk;
 
@@ -223,7 +223,7 @@ bool calculate_c (computing_party_state<private_type, public_type>& party1,
                 return false;
             }
             if (!abb_add<private_type, public_type> (party1.ck[k], party2.ck[k], party3.ck[k],
-                                                     party1.c_interm, party2.c_interm, party3.c_interm,
+                                                     c_interm1, c_interm2, c_interm2,
                                                      party1.ck[k], party2.ck[k], party3.ck[k])) {
                 std::cout << "abb_add failed!(calculate_c)" << std::endl;
                 return false;
