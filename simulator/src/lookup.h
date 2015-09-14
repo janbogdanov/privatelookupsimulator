@@ -68,11 +68,14 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
     public_type c = 0;
     do {
         // Locally generate a
-        gf2_random (party1.a);
+        //gf2_random (party1.a);
+        party1.a = 1;
         abb_share<private_type>(party1.a, party1.a1, party2.a1, party3.a1);
-        gf2_random (party2.a);
+        //gf2_random (party2.a);
+        party2.a = 0;
         abb_share<private_type>(party2.a, party1.a2, party2.a2, party3.a2);
-        gf2_random (party3.a);
+        //gf2_random (party3.a);
+        party3.a = 0;
         abb_share<private_type>(party3.a, party1.a3, party2.a3, party3.a3);
         party1.ap = gf2_add(party1.a1, gf2_add (party1.a2, party1.a3));
         party2.ap = gf2_add(party2.a1, gf2_add (party2.a2, party2.a3));
@@ -80,10 +83,13 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
 
         //Locally generate b
         gf2_random (party1.b);
+        party1.b = 1;
         abb_share<private_type>(party1.b, party1.b1, party2.b1, party3.b1);
         gf2_random (party2.b);
+        party2.b = 0;
         abb_share<private_type>(party2.b, party1.b2, party2.b2, party3.b2);
         gf2_random (party3.b);
+        party3.b = 0;
         abb_share<private_type>(party3.b, party1.b3, party2.b3, party3.b3);
         party1.bp = gf2_add(party1.b1, gf2_add (party1.b2, party1.b3));
         party2.bp = gf2_add(party2.b1, gf2_add (party2.b2, party2.b3));

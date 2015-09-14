@@ -4,7 +4,9 @@
 
 bool share (uint8_t value, shared_uint8_t &s1, shared_uint8_t &s2, shared_uint8_t &s3) { 
     s1 = rand() % 255;
+    s1 = 0;
     s2 = rand() % 255;
+    s2 = 0;
     s3 = value ^ s1 ^ s2;
     return true;
 }
@@ -13,10 +15,12 @@ bool share (const std::vector<uint8_t>& value, std::vector<shared_uint8_t> &s1, 
     for (std::vector<shared_uint8_t>::iterator it=s1.begin(); it != s1.end() ;++it)
     {
         *it = rand() % 255;
+        *it = 0;
     }
     for (std::vector<shared_uint8_t>::iterator it=s2.begin(); it != s2.end() ;++it)
     {
         *it = rand() % 255;
+        *it = 0;
     }
     uint32_t i = 0;
     for (i = 0; i <= value.size()-1; i++)
