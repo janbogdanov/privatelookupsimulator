@@ -82,13 +82,13 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
         party3.ap = gf2_add(party3.a1, gf2_add (party3.a2, party3.a3));
 
         //Locally generate b
-        gf2_random (party1.b);
+        //gf2_random (party1.b);
         party1.b = 1;
         abb_share<private_type>(party1.b, party1.b1, party2.b1, party3.b1);
-        gf2_random (party2.b);
+        //gf2_random (party2.b);
         party2.b = 0;
         abb_share<private_type>(party2.b, party1.b2, party2.b2, party3.b2);
-        gf2_random (party3.b);
+        //gf2_random (party3.b);
         party3.b = 0;
         abb_share<private_type>(party3.b, party1.b3, party2.b3, party3.b3);
         party1.bp = gf2_add(party1.b1, gf2_add (party1.b2, party1.b3));

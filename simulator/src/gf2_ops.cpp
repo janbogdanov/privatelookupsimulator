@@ -72,8 +72,8 @@ gf2to8_t element_n(uint8_t a) {
 void gf2_random(gf2to8_t& a) {
     // TODO Change to use C++11 random number generator
 
-    //a = rand () % 256;
-    a = 0;
+    a = rand () % 256;
+    //a = 0;
 }
 
 uint8_t gf2_val (gf2to8_t a) {
