@@ -13,6 +13,7 @@ gf2to8_t gf2_add (gf2to8_t a, gf2to8_t b);
 gf2to8_t gf2_mul (gf2to8_t a, gf2to8_t b);
 gf2to8_t gf2_inv (gf2to8_t a);
 gf2to8_t gf2_pwr (gf2to8_t a, uint32_t p);
+gf2to8_t element_n (uint8_t a);
 void gf2_random (gf2to8_t& a);
 uint8_t gf2_val (gf2to8_t a);
 

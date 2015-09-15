@@ -147,7 +147,7 @@ bool calc_powers_of_r (
 
 
 template<typename private_type, typename public_type>
-bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& party1,
+bool calc_lagrange_basepoly     (computing_party_state<private_type, public_type>& party1,
                                  computing_party_state<private_type, public_type>& party2,
                                  computing_party_state<private_type, public_type>& party3) {
     uint32_t i = 0;
@@ -166,12 +166,15 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     indices.resize(party1.v.size());
     //indices[0] = 1;
     for (i = 0; i < vectorsize; i++) {
-        indices[i] = element_n(i+1);
+        indices[i] = i+1; //element_n(i+1);
     }
     for (onepoint = 0; onepoint < vectorsize; onepoint++) {
         party1.basicpoly.clear();
         party2.basicpoly.clear();
         party3.basicpoly.clear();
+        party1.basicpoly.resize(vectorsize);
+        party2.basicpoly.resize(vectorsize);
+        party3.basicpoly.resize(vectorsize);
         party1.basicpoly[0] = 1;
         party2.basicpoly[0] = 1;
         party3.basicpoly[0] = 1;
@@ -223,7 +226,7 @@ bool calculate_c (computing_party_state<private_type, public_type>& party1,
     for (k = 0; k < vectorsize; k++) {
         for (i = 0; i < vectorsize; i++) {
             if (!abb_mult_pub<private_type, public_type> (party1.v[i], party2.v[i], party3.v[i],
-                                                          party1.coefficients[i * vectorsize + k], party2.coefficients[i * vectorsize + k], party3.coefficients[i * vectorsize + k],
+                                                          party1.coefficients[k * vectorsize + i], party2.coefficients[k * vectorsize + i], party3.coefficients[k * vectorsize + i],
                                                           c_interm1, c_interm2, c_interm3)) {
                 std::cout << "abb_mult_pub failed!(calculate_c)" << std::endl;
                 return false;
@@ -343,15 +346,15 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
         std::cout << "calc_c failed!" << std::endl;
         return false;
     }
-    for (i = 0; i < party1.coefficients.size(); i++) {
-        DEBUGPRINT_8(coefficients[i]);
+    for (i = 0; i < party1.ck.size(); i++) {
+        DEBUGPRINT_8(ck[i]);
     }
     if (!calculate_y (party1, party2, party3)) {
         std::cout << "calc_w failed!" << std::endl;
         return false;
     }
-    for (i = 0; i < party1.ck.size(); i++) {
-        DEBUGPRINT_8(ck[i]);
+    for (i = 0; i < party1.yk.size(); i++) {
+        DEBUGPRINT_8(yk[i]);
     }
     if (!calculate_z (party1, party2, party3)) {
         std::cout << "calc_z failed!" << std::endl;
