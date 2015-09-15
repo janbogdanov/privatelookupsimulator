@@ -320,49 +320,49 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
         std::cout << "generate_r_with_inverse failed!" << std::endl;
         return false;
     }
-    std::cout << std::endl;
+    /*std::cout << std::endl;
     DEBUGPRINT_8(r);
-    DEBUGPRINT_8(r_inv);
+    DEBUGPRINT_8(r_inv);*/
 
     if (!calc_powers_of_r (party1, party2, party3)) {
         std::cout << "calc_powers_of_r failed!" << std::endl;
         return false;
     }
     uint32_t i = 0;
-    for (i = 0; i < party1.r_powers.size(); i++) {
+    /*for (i = 0; i < party1.r_powers.size(); i++) {
         DEBUGPRINT_8(r_powers[i]);
-    }
+    }*/
     if (!calc_lagrange_basepoly (party1, party2, party3)) {
         std::cout << "calc_lagrange_basepoly failed!" << std::endl;
         return false;
     }
-    for (i = 0; i < party1.coefficients.size(); i++) {
+    /*for (i = 0; i < party1.coefficients.size(); i++) {
         std::cout << "coefficients[" << i << "]" << (uint32_t)party1.coefficients[i] << std::endl;
-    }
+    }*/
     if (!calculate_c (party1, party2, party3)) {
         std::cout << "calc_c failed!" << std::endl;
         return false;
     }
-    for (i = 0; i < party1.ck.size(); i++) {
+    /*for (i = 0; i < party1.ck.size(); i++) {
         DEBUGPRINT_8(ck[i]);
-    }
+    }*/
     if (!calculate_y (party1, party2, party3)) {
         std::cout << "calc_w failed!" << std::endl;
         return false;
     }
-    for (i = 0; i < party1.yk.size(); i++) {
+    /*for (i = 0; i < party1.yk.size(); i++) {
         DEBUGPRINT_8(yk[i]);
-    }
+    }*/
     if (!calculate_z (party1, party2, party3)) {
         std::cout << "calc_z failed!" << std::endl;
         return false;
     }
-    std::cout << "z_interm " << (uint32_t)party1.z_interm << std::endl;
+    //std::cout << "z_interm " << (uint32_t)party1.z_interm << std::endl;
     if (!calculate_w (party1, party2, party3)) {
         std::cout << "calc_w failed!" << std::endl;
         return false;
     }
-    DEBUGPRINT_8(w);
+    //DEBUGPRINT_8(w);
     return true;
 }
 
