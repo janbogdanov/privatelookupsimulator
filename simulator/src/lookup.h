@@ -164,9 +164,9 @@ bool calc_lagrange_basepoly (computing_party_state<private_type, public_type>& p
     party3.basicpoly.resize(vectorsize);
     std::vector<public_type> indices;
     indices.resize(party1.v.size());
-    //indices[0] = 1;
     for (i = 0; i < vectorsize; i++) {
-        indices[i] = element_n(i+1);
+        uint8_t field_i = i + 1;
+        indices[i] = element_n(field_i);
     }
     for (onepoint = 0; onepoint < vectorsize; onepoint++) {
         party1.basicpoly.clear();
@@ -337,27 +337,27 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
         return false;
     }
     for (i = 0; i < party1.coefficients.size(); i++) {
-        DEBUGPRINT_8(coefficients[i]);
+        std::cout << "coefficients[" << i << "]" << (uint32_t)party1.coefficients[i] << std::endl;
     }
     if (!calculate_c (party1, party2, party3)) {
         std::cout << "calc_c failed!" << std::endl;
         return false;
     }
-    for (i = 0; i < party1.coefficients.size(); i++) {
-        DEBUGPRINT_8(coefficients[i]);
+    for (i = 0; i < party1.ck.size(); i++) {
+        DEBUGPRINT_8(ck[i]);
     }
     if (!calculate_y (party1, party2, party3)) {
         std::cout << "calc_w failed!" << std::endl;
         return false;
     }
-    for (i = 0; i < party1.ck.size(); i++) {
-        DEBUGPRINT_8(ck[i]);
+    for (i = 0; i < party1.yk.size(); i++) {
+        DEBUGPRINT_8(yk[i]);
     }
     if (!calculate_z (party1, party2, party3)) {
         std::cout << "calc_z failed!" << std::endl;
         return false;
     }
-    DEBUGPRINT_8(z_interm);
+    std::cout << "z_interm " << (uint32_t)party1.z_interm << std::endl;
     if (!calculate_w (party1, party2, party3)) {
         std::cout << "calc_w failed!" << std::endl;
         return false;
