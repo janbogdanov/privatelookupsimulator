@@ -24,7 +24,7 @@ bool test_8bit_single_index_lookup (std::vector<uint8_t> array, size_t index) {
     }
 
     // Share the index
-    if (!share (index, party1.j, party2.j, party3.j)) {
+    if (!share (element_n((uint8_t)(index + 1)), party1.j, party2.j, party3.j)) {
         cout << "FAILED! (Secret sharing of index failed.)" << endl;
         return false;
     }
