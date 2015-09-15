@@ -24,7 +24,7 @@ bool test_8bit_single_index_lookup (std::vector<uint8_t> array, size_t index) {
     }
 
     // Share the index
-    if (!share (index+1, party1.j, party2.j, party3.j)) {
+    if (!share (element_n((uint8_t)(index + 1)), party1.j, party2.j, party3.j)) {
         cout << "FAILED! (Secret sharing of index failed.)" << endl;
         return false;
     }
@@ -50,19 +50,19 @@ bool test_8bit_single_index_lookup (std::vector<uint8_t> array, size_t index) {
 
     cout << "OK" << endl;
     return true;
-}
+    }
 
 
 bool test_8bit_private_lookup () {
 
-    bool success = false;
+    bool success = true;
 
     // Scalar tests
-    //success = test_8bit_single_index_lookup({1, 2}, 0);
-    //success &= test_8bit_single_index_lookup({2, 3}, 0);
+    success = test_8bit_single_index_lookup({1, 2}, 0);
+    success &= test_8bit_single_index_lookup({2, 3}, 0);
     success &= test_8bit_single_index_lookup({2, 3}, 1);
     success &= test_8bit_single_index_lookup({3, 4, 5}, 1);
-    //success &= test_8bit_single_index_lookup({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 5);
+    success &= test_8bit_single_index_lookup({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 5);
     // ...
 
     return success;
