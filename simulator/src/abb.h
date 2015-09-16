@@ -2,6 +2,7 @@
 #define ABB
 #include <iostream>
 #include "secshare.h"
+#include "profiler.h"
 
 template<typename private_type>
 bool abb_share (const private_type& s, private_type& share1, private_type& share2, private_type& share3) {

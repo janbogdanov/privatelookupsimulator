@@ -64,6 +64,8 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
                               computing_party_state<private_type, public_type>& party2,
                               computing_party_state<private_type, public_type>& party3)
 {
+    time_measurements timer;
+    begin_profile(timer);
 
     public_type c = 0;
     do {
@@ -111,6 +113,8 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
     party1.r_inv = gf2_mul(party1.bp, c_inv);
     party2.r_inv = gf2_mul(party2.bp, c_inv);
     party3.r_inv = gf2_mul(party3.bp, c_inv);
+
+    begin_protocol(timer);
 
     return true;
 }
@@ -328,8 +332,8 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
         std::cout << "calc_powers_of_r failed!" << std::endl;
         return false;
     }
-    uint32_t i = 0;
-    /*for (i = 0; i < party1.r_powers.size(); i++) {
+    /*uint32_t i = 0;
+    for (i = 0; i < party1.r_powers.size(); i++) {
         DEBUGPRINT_8(r_powers[i]);
     }*/
     if (!calc_lagrange_basepoly (party1, party2, party3)) {

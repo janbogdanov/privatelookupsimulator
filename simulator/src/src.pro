@@ -24,7 +24,8 @@ HEADERS += \
     gf2_tests.h \
     secshare_tests.h \
     lookup_tests.h \
-    abb.h
+    abb.h \
+    profiler.h
 
 
 
