@@ -3,7 +3,8 @@ include (../config.pri)
 TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
-CONFIG -= qt
+
+CONFIG += c++11
 
 TARGET = PrivateLookupSimulator
 
@@ -25,7 +26,9 @@ HEADERS += \
     secshare_tests.h \
     lookup_tests.h \
     abb.h \
-    profiler.h
+    profiler.h \
+    ratio_io.h \
+    chrono_io.h
 
 
 
