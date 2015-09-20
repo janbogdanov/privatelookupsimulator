@@ -25,18 +25,17 @@ void begin_profile(time_measurements& timer) {
 void begin_protocol(time_measurements& timer) {
 
     timer.protocol_start_timestamp.start();
-    qint64 local = timer.start_global.nsecsElapsed();
-    std::ofstream time_log;
+    //qint64 local = timer.start_global.nsecsElapsed();
+    /*std::ofstream time_log;
     time_log.open ("timelog.txt", std::ios_base::app);
     time_log << "local ";
     time_log << local;
-    time_log << "\n";
-
+    time_log << "\n";*/
 }
 
 void end_protocol(time_measurements& timer) {
 
-    timer.protocol_end_timestamp.start();
+    //timer.protocol_end_timestamp.start();
     qint64 protocol = timer.protocol_start_timestamp.nsecsElapsed();
     std::ofstream time_log;
     time_log.open ("timelog.txt", std::ios_base::app);
@@ -48,13 +47,13 @@ void end_protocol(time_measurements& timer) {
 
 void end_profile(time_measurements& timer) {
 
-    qint64 local = timer.protocol_end_timestamp.nsecsElapsed();
+    //qint64 local = timer.protocol_end_timestamp.nsecsElapsed();
     qint64 end = timer.start_global.nsecsElapsed();
     std::ofstream time_log;
     time_log.open ("timelog.txt", std::ios_base::app);
-    time_log << "local ";
+   /* time_log << "local ";
     time_log << local;
-    time_log << "\n";
+    time_log << "\n";*/
     time_log << "end ";
     time_log << end;
     time_log << "\n";

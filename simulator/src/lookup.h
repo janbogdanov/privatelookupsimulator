@@ -3,10 +3,10 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "secshare.h"
+#include "profiler.h"
 #include "abb.h"
-
-
 
 #define DEBUGPRINT_8(VAR)\
     {gf2to8_t v = 0;\
@@ -65,8 +65,6 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
                               computing_party_state<private_type, public_type>& party2,
                               computing_party_state<private_type, public_type>& party3)
 {
-    time_measurements timer;
-    begin_profile(timer);
 
     public_type c = 0;
     do {
@@ -100,7 +98,7 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
         }
 
         if (!abb_reconstruct (party1.c1, party2.c2, party3.c3, c)) {
-            std::cout << "abb_reconstruct    failed!" << std::endl;
+            std::cout << "abb_reconstruct failed!" << std::endl;
             return false;
         }
 
@@ -114,8 +112,6 @@ bool generate_r_with_inverse (computing_party_state<private_type, public_type>& 
     party1.r_inv = gf2_mul(party1.bp, c_inv);
     party2.r_inv = gf2_mul(party2.bp, c_inv);
     party3.r_inv = gf2_mul(party3.bp, c_inv);
-
-    begin_protocol(timer);
 
     return true;
 }
@@ -321,52 +317,106 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
              computing_party_state<private_type, public_type>& party2,
              computing_party_state<private_type, public_type>& party3) {
 
+    std::ofstream time_log;
+    time_log.open ("timelog.txt", std::ios_base::app);
+    time_log << "--- Offline phase start ---\n";
+    time_log.flush();
+
+    time_measurements timer;
+    begin_profile(timer);
+
+    time_log << "generate_r_with_inverse start\n";
+    time_log.flush();
     if (!generate_r_with_inverse (party1, party2, party3)) {
         std::cout << "generate_r_with_inverse failed!" << std::endl;
         return false;
     }
+    time_log << "generate_r_with_inverse end\n";
+    time_log.flush();
     /*std::cout << std::endl;
     DEBUGPRINT_8(r);
     DEBUGPRINT_8(r_inv);*/
 
+    time_log << "calc_powers_of_r start\n";
+    time_log.flush();
     if (!calc_powers_of_r (party1, party2, party3)) {
         std::cout << "calc_powers_of_r failed!" << std::endl;
         return false;
     }
+    time_log << "calc_powers_of_r end\n";
+    time_log.flush();
     /*uint32_t i = 0;
     for (i = 0; i < party1.r_powers.size(); i++) {
         DEBUGPRINT_8(r_powers[i]);
     }*/
+    time_log << "calc_lagrange_basepoly start\n";
+    time_log.flush();
     if (!calc_lagrange_basepoly (party1, party2, party3)) {
         std::cout << "calc_lagrange_basepoly failed!" << std::endl;
         return false;
     }
+    time_log << "calc_lagrange_basepoly end\n";
+    time_log.flush();
     /*for (i = 0; i < party1.coefficients.size(); i++) {
         std::cout << "coefficients[" << i << "]" << (uint32_t)party1.coefficients[i] << std::endl;
     }*/
+
+    time_log << "--- Offline phase end ---\n";
+    time_log.flush();
+    end_profile(timer);
+    time_log << "--- Vector-only phase start ---\n";
+    time_log.flush();
+    time_log << "calculate_c start\n";
+    time_log.flush();
+    begin_profile(timer);
     if (!calculate_c (party1, party2, party3)) {
         std::cout << "calc_c failed!" << std::endl;
         return false;
     }
+    time_log << "calculate_c end\n";
+    time_log.flush();
     /*for (i = 0; i < party1.ck.size(); i++) {
         DEBUGPRINT_8(ck[i]);
     }*/
+    time_log << "calculate_y start\n";
+    time_log.flush();
     if (!calculate_y (party1, party2, party3)) {
         std::cout << "calc_w failed!" << std::endl;
         return false;
     }
+    time_log << "calculate_y end\n";
+    time_log.flush();
     /*for (i = 0; i < party1.yk.size(); i++) {
         DEBUGPRINT_8(yk[i]);
     }*/
+
+    time_log << "--- Vector-only phase end ---\n";
+    time_log.flush();
+    end_profile(timer);
+    time_log << "--- Online phase start ---\n";
+    time_log.flush();
+    time_log << "calculate_z start\n";
+    time_log.flush();
+    begin_profile(timer);
+
     if (!calculate_z (party1, party2, party3)) {
         std::cout << "calc_z failed!" << std::endl;
         return false;
     }
+    time_log << "calculate_z end\n";
+    time_log.flush();
     //std::cout << "z_interm " << (uint32_t)party1.z_interm << std::endl;
+    time_log << "calculate_w start\n";
+    time_log.flush();
     if (!calculate_w (party1, party2, party3)) {
         std::cout << "calc_w failed!" << std::endl;
         return false;
     }
+    time_log << "calculate_w end\n";
+    time_log.flush();
+    time_log << "--- Online phase end ---\n";
+    time_log.flush();
+    end_profile(timer);
     //DEBUGPRINT_8(w);
     return true;
 }
