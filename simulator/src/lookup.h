@@ -322,8 +322,7 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     time_log << "--- Offline phase start ---\n";
     time_log.flush();
 
-    time_measurements timer;
-    begin_profile(timer);
+    begin_profile();
 
     time_log << "generate_r_with_inverse start\n";
     time_log.flush();
@@ -363,12 +362,12 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
 
     time_log << "--- Offline phase end ---\n";
     time_log.flush();
-    end_profile(timer);
+    end_profile();
     time_log << "--- Vector-only phase start ---\n";
     time_log.flush();
     time_log << "calculate_c start\n";
     time_log.flush();
-    begin_profile(timer);
+    begin_profile();
     if (!calculate_c (party1, party2, party3)) {
         std::cout << "calc_c failed!" << std::endl;
         return false;
@@ -392,12 +391,12 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
 
     time_log << "--- Vector-only phase end ---\n";
     time_log.flush();
-    end_profile(timer);
+    end_profile();
     time_log << "--- Online phase start ---\n";
     time_log.flush();
     time_log << "calculate_z start\n";
     time_log.flush();
-    begin_profile(timer);
+    begin_profile();
 
     if (!calculate_z (party1, party2, party3)) {
         std::cout << "calc_z failed!" << std::endl;
@@ -416,7 +415,7 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     time_log.flush();
     time_log << "--- Online phase end ---\n";
     time_log.flush();
-    end_profile(timer);
+    end_profile();
     //DEBUGPRINT_8(w);
     return true;
 }

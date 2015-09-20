@@ -7,19 +7,17 @@
 
 template<typename private_type>
 bool abb_share (const private_type& s, private_type& share1, private_type& share2, private_type& share3) {
-    time_measurements timer2;
-    begin_protocol(timer2);
+    begin_protocol();
     private_type interm = share (s, share1, share2, share3); //
-    end_protocol(timer2);
+    end_protocol();
     return interm;
 }
 
 template<typename private_type>
 bool abb_reconstruct (const private_type& share1, const private_type& share2, const private_type& share3, private_type& s) {
-    time_measurements timer2;
-    begin_protocol(timer2);
+    begin_protocol();
     private_type interm = reconstruct (share1, share2, share3, s); //
-    end_protocol(timer2);
+    end_protocol();
     return interm;
 }
 
@@ -40,8 +38,7 @@ bool abb_mult (const private_type& a1, const private_type a2, const private_type
                const private_type& b1, const private_type b2, const private_type b3,
                private_type& c1, private_type& c2, private_type& c3) {
 
-    time_measurements timer2;
-    begin_protocol(timer2);
+    begin_protocol();
 
     public_type a = 0, b = 0, c = 0;
 
@@ -61,7 +58,7 @@ bool abb_mult (const private_type& a1, const private_type a2, const private_type
         std::cout << "Sharing failed!" << std::endl;
         return false;
     }
-    end_protocol(timer2);
+    end_protocol();
     return true;
 }
 

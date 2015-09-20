@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     gf2_ops.cpp \
     secshare_tests.cpp \
     secshare.cpp \
-    lookup_tests.cpp
+    lookup_tests.cpp \
+    profiler.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
