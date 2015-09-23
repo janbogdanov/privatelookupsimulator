@@ -1,6 +1,6 @@
-#include "gf2_ops.h"
-
 #include <cstdlib>
+#include <vector>
+#include "gf2_ops.h"
 
 // 8-bit variants
 gf2to8_t gf2_new (uint8_t a) {
@@ -67,6 +67,13 @@ gf2to8_t gf2_pwr (gf2to8_t a, uint32_t p) {
 
 gf2to8_t element_n(uint8_t a) {
     return a & 255;
+}
+
+std::vector<gf2to8_t> element_nvector(std::vector<uint8_t> a) {
+    for (uint32_t i = 0; i < a.size(); i++) {
+        a[i] = a[i] & 255;
+    }
+    return a;
 }
 
 void gf2_random(gf2to8_t& a) {
@@ -146,6 +153,13 @@ gf2to32_t gf2_pwr (gf2to32_t a, uint32_t p) {
 
 gf2to32_t element_n (uint32_t a) {
     return a & 4294967295;
+}
+
+std::vector<gf2to32_t> element_nvector(std::vector<uint32_t> a) {
+    for (uint32_t i = 0; i < a.size(); i++) {
+        a[i] = a[i] & 4294967295;
+    }
+    return a;
 }
 
 void gf2_random(gf2to32_t& a) {

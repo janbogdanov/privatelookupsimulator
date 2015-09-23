@@ -62,7 +62,8 @@ bool reconstruct (shared_uint8_t s1, shared_uint8_t s2, shared_uint8_t s3, uint8
 
 bool reconstruct (const std::vector<shared_uint8_t> &s1, const std::vector<shared_uint8_t> &s2, const std::vector<shared_uint8_t> &s3, std::vector<uint8_t>& value) {
     uint32_t i = 0;
-    for (i = 0; i <= value.size()-1; i++)
+    value.resize(s1.size());
+    for (i = 0; i < value.size(); i++)
     {
         value[i] = s1[i] ^ s2[i] ^ s3[i];
     }
@@ -76,7 +77,7 @@ bool reconstruct (shared_uint32_t s1, shared_uint32_t s2, shared_uint32_t s3, ui
 
 bool reconstruct (const std::vector<shared_uint32_t> &s1, const std::vector<shared_uint32_t> &s2, const std::vector<shared_uint32_t> &s3, std::vector<uint32_t>& value) {
     uint32_t i = 0;
-    for (i = 0; i <= value.size()-1; i++)
+    for (i = 0; i < value.size(); i++)
     {
         value[i] = s1[i] ^ s2[i] ^ s3[i];
     }

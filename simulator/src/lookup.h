@@ -18,7 +18,8 @@ struct computing_party_state{
     // The secret vector
     std::vector<private_type> v;
     // The secret index
-    private_type j = 0;
+    //private_type j = 0;
+    std::vector<private_type> j;
 
     // Random r and inverse generation
     private_type a = 0;
@@ -51,12 +52,17 @@ struct computing_party_state{
     std::vector<private_type> yk;
 
     //calculate online phase
-    private_type z_private = 0;
+    /*private_type z_private = 0;// vektoriks
     public_type z = 0;
-    public_type z_interm = 0;
+    public_type z_interm = 0;*/
+
+    std::vector<private_type> z_private;
+    std::vector<public_type> z;
+    std::vector<public_type> z_interm;
 
     // The result
-    private_type w = 0;
+    //private_type w = 0;
+    std::vector<private_type> w;
 
 };
 
@@ -221,6 +227,7 @@ bool calculate_c (computing_party_state<private_type, public_type>& party1,
     party1.ck.resize(vectorsize);
     party2.ck.resize(vectorsize);
     party3.ck.resize(vectorsize);
+    // veel üks 'for'
     for (k = 0; k < vectorsize; k++) {
         for (i = 0; i < vectorsize; i++) {
             if (!abb_mult_pub<private_type, public_type> (party1.v[i], party2.v[i], party3.v[i],
@@ -266,16 +273,26 @@ bool calculate_z (computing_party_state<private_type, public_type>& party1,
                   computing_party_state<private_type, public_type>& party2,
                   computing_party_state<private_type, public_type>& party3) {
 
-    if (!abb_mult<private_type, public_type> (party1.j, party2.j, party3.j,
+   // abb_mult_vec siia! ette anda j massiivi; deklareerin massiivi, kus kopeerin r_inv nii palju kui vaja
+    if (!abb_mult_vec<private_type, public_type> (party1.j, party2.j, party3.j,     // ztidest massiiv, j ka massiiv
               party1.r_inv, party2.r_inv, party3.r_inv,
               party1.z_private, party2.z_private, party3.z_private)) {
         std::cout << "abb_mult failed!(calculate_z)" << std::endl;
         return false;
     }
 
-    public_type z_interm = 0;
+    /*if (!abb_mult<private_type, public_type> (party1.j, party2.j, party3.j,     // ztidest massiiv, j ka massiiv
+              party1.r_inv, party2.r_inv, party3.r_inv,
+              party1.z_private, party2.z_private, party3.z_private)) {
+        std::cout << "abb_mult failed!(calculate_z)" << std::endl;
+        return false;
+    }*/
 
-    if (!abb_reconstruct<private_type> (party1.z_private, party2.z_private, party3.z_private, z_interm)) {
+    //public_type z_interm = 0;
+    std::vector<public_type> z_interm;
+
+     // abb_reconstruct_vec
+    if (!abb_reconstruct_vec<private_type> (party1.z_private, party2.z_private, party3.z_private, z_interm)) {
         std::cout << "reconstruction failed!(z)" << std::endl;
         return false;
     }
@@ -292,17 +309,33 @@ bool calculate_w (computing_party_state<private_type, public_type>& party1,
                   computing_party_state<private_type, public_type>& party3) {
     uint32_t k = 0;
     uint32_t vectorsize = party1.v.size();
-    private_type w_interm1 = 0;
-    private_type w_interm2 = 0;
-    private_type w_interm3 = 0;
+    /*public_type w_interm1 = 0;
+    public_type w_interm2 = 0;
+    public_type w_interm3 = 0;*/
+    std::vector<private_type> w_interm1;
+    std::vector<private_type> w_interm2;
+    std::vector<private_type> w_interm3;
+    w_interm1.resize(vectorsize);
+    w_interm2.resize(vectorsize);
+    w_interm3.resize(vectorsize);
+    party1.w.resize(vectorsize);
+    party2.w.resize(vectorsize);
+    party3.w.resize(vectorsize);
     for (k = 0; k < vectorsize; k++) {
-        if (!abb_mult_pub_final_calc<private_type, public_type> (party1.yk[k], party2.yk[k], party3.yk[k],
+        // abb mult pub finalist calc vec versioon? kutsutakse kõigi zttide peal; w_intermid on ka massiivid
+        /*if (!abb_mult_pub_final_calc<private_type, public_type> (party1.yk[k], party2.yk[k], party3.yk[k],
                                                                  party1.z_interm, k,
                                                                  w_interm1, w_interm2, w_interm3)) {
             std::cout << "abb_mult_pub_final_calc failed!(w)" << std::endl;
-            return false;
+            return false;*/
+        if (!abb_mult_pub_final_calc_vec<private_type, public_type> (party1.yk[k], party2.yk[k], party3.yk[k],
+                                                                         party1.z_interm, k,
+                                                                         w_interm1, w_interm2, w_interm3)) {
+                    std::cout << "abb_mult_pub_final_calc failed!(w)" << std::endl;
+                    return false;
         }
-        if (!abb_add<private_type, public_type> (party1.w, party2.w, party3.w,
+        // vec versioon
+        if (!abb_add_vec<private_type, public_type> (party1.w, party2.w, party3.w,
                                                  w_interm1, w_interm2, w_interm3,
                                                  party1.w, party2.w, party3.w)) {
             std::cout << "abb_add failed!(w)" << std::endl;

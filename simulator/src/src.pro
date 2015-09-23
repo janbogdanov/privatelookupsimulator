@@ -27,9 +27,7 @@ HEADERS += \
     secshare_tests.h \
     lookup_tests.h \
     abb.h \
-    profiler.h \
-    ratio_io.h \
-    chrono_io.h
+    profiler.h
 
 
 
