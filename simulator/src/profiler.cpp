@@ -26,9 +26,9 @@ void begin_protocol() {
     qint64 protocol_start_timestamp = stopper.nsecsElapsed();
     std::ofstream time_log;
     time_log.open ("timelog.txt", std::ios_base::app);
-    time_log << "local ";
+    time_log << "'local ";
     time_log << protocol_start_timestamp;
-    time_log << "\n";
+    //time_log << "";
     stopper.start();
 }
 
@@ -38,9 +38,9 @@ void end_protocol() {
     qint64 protocol_end_timestamp = stopper.nsecsElapsed();
     std::ofstream time_log;
     time_log.open ("timelog.txt", std::ios_base::app);
-    time_log << "protocol ";
+    time_log << "'protocol ";
     time_log << protocol_end_timestamp;
-    time_log << "\n";
+    //time_log << "";
     stopper.start();
 
 }
@@ -54,7 +54,7 @@ void end_profile() {
    /* time_log << "local ";
     time_log << local;
     time_log << "\n";*/
-    time_log << "local ";
+    time_log << "'local ";
     time_log << end;
-    time_log << "\n";
+    //time_log << "\n";
 }

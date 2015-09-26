@@ -169,7 +169,7 @@ bool calc_lagrange_basepoly     (computing_party_state<private_type, public_type
     std::vector<public_type> indices;
     indices.resize(party1.v.size());
     for (i = 0; i < vectorsize; i++) {
-        uint8_t field_i = i + 1;
+        uint32_t field_i = i + 1;           // uint8_t läks uint32_t'ks 24.09.2015 14.42
         indices[i] = element_n(field_i);
     }
     for (onepoint = 0; onepoint < vectorsize; onepoint++) {
@@ -396,7 +396,7 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     time_log << "--- Offline phase end ---\n";
     time_log.flush();
     end_profile();
-    time_log << "--- Vector-only phase start ---\n";
+    time_log << "\n--- Vector-only phase start ---\n";
     time_log.flush();
     time_log << "calculate_c start\n";
     time_log.flush();
@@ -425,7 +425,7 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     time_log << "--- Vector-only phase end ---\n";
     time_log.flush();
     end_profile();
-    time_log << "--- Online phase start ---\n";
+    time_log << "\n--- Online phase start ---\n";
     time_log.flush();
     time_log << "calculate_z start\n";
     time_log.flush();
@@ -449,6 +449,8 @@ bool lookup (computing_party_state<private_type, public_type>& party1,
     time_log << "--- Online phase end ---\n";
     time_log.flush();
     end_profile();
+    time_log << "\n\n";
+    time_log.flush();
     //DEBUGPRINT_8(w);
     return true;
 }
